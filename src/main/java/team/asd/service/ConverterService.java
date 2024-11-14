@@ -3,6 +3,7 @@ package team.asd.service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.zip.DataFormatException;
 
 public class ConverterService implements IsConverterService {
 
@@ -17,7 +18,12 @@ public class ConverterService implements IsConverterService {
 			return null;
 
 		int number;
-		number = Integer.parseInt(value);
+		try {
+			number = Integer.parseInt(value);
+		}
+		catch (NumberFormatException e){
+			throw new NumberFormatException("String does not contain numbers");
+		}
 		return number;
 	}
 
@@ -27,7 +33,12 @@ public class ConverterService implements IsConverterService {
 			return null;
 
 		double number;
-		number = Double.parseDouble(value);
+		try {
+			number = Double.parseDouble(value);
+		}
+		catch (NumberFormatException e){
+			throw new NumberFormatException("String does not contain numbers");
+		}
 		return number;
 	}
 
@@ -38,7 +49,12 @@ public class ConverterService implements IsConverterService {
 
 		LocalDate date;
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		date = LocalDate.parse(dateString, formatter);
+		try {
+			date = LocalDate.parse(dateString, formatter);
+		}
+		catch (DateTimeParseException e){
+			throw new DateTimeParseException("Cannot convert String to LocalDate", e.getParsedString(), e.getErrorIndex());
+		}
 		return date;
 	}
 }
