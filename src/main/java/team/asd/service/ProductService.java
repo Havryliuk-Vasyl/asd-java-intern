@@ -33,8 +33,7 @@ public class ProductService implements IsProductService {
 		return CollectionUtils.isEmpty(productList) ?
 				Collections.emptyList() :
 				productList.stream()
-						.filter(product -> isProductValid(product) && product.getState()
-								.equals(ProductState.Created))
+						.filter(product -> isProductValid(product) && ProductState.Created.equals(product.getState()))
 						.collect(Collectors.toList());
 	}
 
