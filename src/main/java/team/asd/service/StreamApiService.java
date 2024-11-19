@@ -46,7 +46,7 @@ public class StreamApiService implements IsStreamApiService {
 			return Collections.emptyList();
 
 		return stringList.stream()
-				.filter(str -> str != null && str.matches("-?\\d+"))
+				.filter(str -> str != null)
 				.filter(this::canConvertStringToInt)
 				.map(Integer::valueOf)
 				.collect(Collectors.toList());
@@ -143,8 +143,11 @@ public class StreamApiService implements IsStreamApiService {
 
 	private boolean canConvertStringToInt(String string) {
 		try {
-			new BigInteger(string).intValueExact();
-			return true;
+			if (string.matches("-?\\d+")) {
+				new BigInteger(string).intValueExact();
+				return true;
+			}
+			return false;
 		} catch (ArithmeticException e) {
 			return false;
 		}
