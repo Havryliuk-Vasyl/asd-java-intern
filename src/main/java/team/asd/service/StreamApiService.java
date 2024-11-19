@@ -47,14 +47,7 @@ public class StreamApiService implements IsStreamApiService {
 
 		return stringList.stream()
 				.filter(str -> str != null && str.matches("-?\\d+"))
-				.filter(str -> {
-					try {
-						new BigInteger(str).intValueExact();
-						return true;
-					} catch (ArithmeticException e) {
-						return false;
-					}
-				})
+				.filter(this::canConvertStringToInt)
 				.map(Integer::valueOf)
 				.collect(Collectors.toList());
 	}
@@ -146,5 +139,14 @@ public class StreamApiService implements IsStreamApiService {
 		return listWithDuplicates.stream()
 				.distinct()
 				.collect(Collectors.toList());
+	}
+
+	private boolean canConvertStringToInt(String string) {
+		try {
+			new BigInteger(string).intValueExact();
+			return true;
+		} catch (ArithmeticException e) {
+			return false;
+		}
 	}
 }
