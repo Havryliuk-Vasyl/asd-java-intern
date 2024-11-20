@@ -2,53 +2,31 @@ package team.asd.service;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CollectionService implements IsCollectionService {
 	@Override
 	public List<Object> unmodifiableList(Object... objects) {
-		if (objects.length == 0) {
-			return Collections.unmodifiableList(new ArrayList<>());
-		}
-
-		List<Object> list = new ArrayList<>();
-		for (Object object : objects) {
-			if (object != null) {
-				list.add(object);
-			}
-		}
-		return Collections.unmodifiableList(list);
+		return Arrays.stream(objects)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toUnmodifiableList());
 	}
 
 	@Override
 	public List<Object> immutableList(Object... objects) {
-		if (objects.length == 0) {
-			return Collections.unmodifiableList(new ArrayList<>());
-		}
-
-		List<Object> list = new ArrayList<>();
-		for (Object object : objects) {
-			if (object != null) {
-				list.add(object);
-			}
-		}
-		return Collections.unmodifiableList(list);
+		return objects == null ? List.of() : List.of(objects);
 	}
 
 	@Override
 	public Set<Object> retrieveObjectsThatPresentInBothLists(Set<Object> firstSet, Set<Object> secondSet) {
-		if (CollectionUtils.isEmpty(firstSet) || CollectionUtils.isEmpty(secondSet))
-			return Collections.emptySet();
-
-		Set<Object> newSet = new HashSet<>();
-		for (Object object : firstSet) {
-			if (secondSet.contains(object))
-				newSet.add(object);
-		}
-		return newSet;
+		return CollectionUtils.isEmpty(firstSet) || CollectionUtils.isEmpty(secondSet) ?
+				Collections.emptySet() :
+				new HashSet<>(CollectionUtils.intersection(firstSet, secondSet));
 	}
 }
