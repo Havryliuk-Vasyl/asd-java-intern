@@ -15,9 +15,11 @@ import java.time.temporal.WeekFields;
 import java.util.Locale;
 
 public class CalendarService implements IsCalendarService {
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 	@Override
 	public String toString(LocalDate date) {
-		return date == null ? null : date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		return date == null ? null : date.format(formatter);
 	}
 
 	@Override
@@ -26,7 +28,6 @@ public class CalendarService implements IsCalendarService {
 			return null;
 		}
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		try {
 			return LocalDate.parse(stringDate, formatter);
 		} catch (DateTimeParseException e) {
@@ -90,10 +91,8 @@ public class CalendarService implements IsCalendarService {
 
 		dateString = dateString.replaceAll("(\\d{1,2})(st|nd|rd|th|ft)", "$1")
 				.trim();
-
 		try {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM yyyy");
-			LocalDate date = LocalDate.parse(dateString, formatter);
+			LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("d MMM yyyy"));
 
 			if (date.getYear() < 1000 || date.getYear() > 3000)
 				throw new DateTimeException("Year out of range [1000, 3000]");
