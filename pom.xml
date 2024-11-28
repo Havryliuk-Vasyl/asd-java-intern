@@ -3,11 +3,9 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>team.asd</groupId>
 	<artifactId>java-intern</artifactId>
 	<version>1.0-SNAPSHOT</version>
-
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
@@ -49,8 +47,17 @@
 			<version>0.10.2</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>team.asd</groupId>
+			<artifactId>redis-module</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
-
 
 	<build>
 		<plugins>
@@ -88,6 +95,7 @@
 			<url>http://185.126.115.194:8081/repository/maven-snapshots</url>
 		</repository>
 	</distributionManagement>
+
 	<repositories>
 		<repository>
 			<id>asd-nexus</id>
