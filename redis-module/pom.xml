@@ -59,4 +59,11 @@
 			<url>http://185.126.115.194:8081/repository/maven-snapshots</url>
 		</repository>
 	</distributionManagement>
+	<repositories>
+		<repository>
+			<id>asd-nexus</id>
+			<name>ASD Nexus Instance</name>
+			<url>http://185.126.115.194:8081/repository/maven-snapshots</url>
+		</repository>
+	</repositories>
 </project>
