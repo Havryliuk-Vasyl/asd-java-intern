@@ -27,7 +27,9 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-        
+    - uses: s4u/maven-settings-action@v2.8.0
+      with:
+        servers: '[{"id": "asd-nexus", "username": "pipeline", "password": "testP@ssword"}]'    
     - name: Build with Maven 
       env:
         ENVIRONMENT_VALUE: v@lue
