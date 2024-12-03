@@ -1,110 +1,139 @@
 package team.asd.redis;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class RedisClientServiceTest {
-	@Mock
-	RedisClientService redisClientService;
 
-	@Test
-	void testReadByKey() {
-		String key = "key";
-		String value = "value";
+    @InjectMocks
+    RedisClientService redisClientService;
 
-		when(redisClientService.readByKey(key)).thenReturn(value);
+    @Mock
+    JedisPool jedisPool;
 
-		String result = redisClientService.readByKey(key);
+    @Mock
+    Jedis jedis;
 
-		verify(redisClientService).readByKey(key);
-		assert result.equals(value);
-	}
+    @BeforeEach
+    void setUp() {
+        when(jedisPool.getResource()).thenReturn(jedis);
+        redisClientService = new RedisClientService(jedisPool);
+    }
 
-	@Test
-	void testSaveValueByKey() {
-		String key = "lol";
-		String value = "value";
+    @Test
+    void testReadByKey() {
+        String key = "testKey";
+        String value = "testValue";
 
-		redisClientService.saveValueByKey(key, value);
+        when(jedis.get(key)).thenReturn(value);
 
-		verify(redisClientService).saveValueByKey(key, value);
-	}
+        String result = redisClientService.readByKey(key);
 
-	@Test
-	void testSaveList() {
-		String key = "listKey";
-		List<String> values = Arrays.asList("value1", "value2");
+        Assertions.assertEquals(value, result);
 
-		redisClientService.saveList(key, values);
+        verify(jedis).get(key);
+        verify(jedis).close();
+    }
 
-		verify(redisClientService).saveList(key, values);
-	}
+    @Test
+    void testSaveValueByKey() {
+        String key = "testKey";
+        String value = "testValue";
 
-	@Test
-	void testSaveElementIntoList() {
-		String key = "listKey";
-		String element = "newElement";
+        redisClientService.saveValueByKey(key, value);
 
-		redisClientService.saveElementIntoList(key, element);
+        verify(jedis).set(key, value);
+        verify(jedis).close();
+    }
 
-		verify(redisClientService).saveElementIntoList(key, element);
-	}
+    @Test
+    void testSaveList() {
+        String key = "listKey";
+        List<String> values = Arrays.asList("value1", "value2");
 
-	@Test
-	void testRetrieveList() {
-		String key = "listKey";
-		List<String> expectedList = Arrays.asList("value1", "value2");
+        redisClientService.saveList(key, values);
 
-		when(redisClientService.retrieveList(key)).thenReturn(expectedList);
+        for (String value : values) {
+            verify(jedis).rpush(key, value);
+        }
+        verify(jedis).close();
+    }
 
-		List<String> result = redisClientService.retrieveList(key);
+    @Test
+    void testSaveElementIntoList() {
+        String key = "listKey";
+        String value = "newElement";
 
-		verify(redisClientService).retrieveList(key);
-		assert result.equals(expectedList);
-	}
+        redisClientService.saveElementIntoList(key, value);
 
-	@Test
-	void testSaveValueInHashMap() {
-		String mapKey = "hashKey";
-		String field = "field";
-		String value = "value";
+        verify(jedis).sadd(key, value);
+        verify(jedis).close();
+    }
 
-		redisClientService.saveValueInHashMap(mapKey, field, value);
+    @Test
+    void testRetrieveList() {
+        String key = "listKey";
+        List<String> expectedList = Arrays.asList("value1", "value2");
 
-		verify(redisClientService).saveValueInHashMap(mapKey, field, value);
-	}
+        when(jedis.lrange(key, 0, -1)).thenReturn(expectedList);
 
-	@Test
-	void testRetrieveValueFromHashMap() {
-		String mapKey = "hashKey";
-		String field = "field";
-		String expectedValue = "value";
+        List<String> result = redisClientService.retrieveList(key);
 
-		when(redisClientService.retrieveValueFromHashMap(mapKey, field)).thenReturn(expectedValue);
+        Assertions.assertEquals(expectedList, result);
+        verify(jedis).lrange(key, 0, -1);
+        verify(jedis).close();
+    }
 
-		String result = redisClientService.retrieveValueFromHashMap(mapKey, field);
+    @Test
+    void testSaveValueInHashMap() {
+        String mapKey = "hashKey";
+        String field = "field";
+        String value = "value";
 
-		verify(redisClientService).retrieveValueFromHashMap(mapKey, field);
-		assert result.equals(expectedValue);
-	}
+        redisClientService.saveValueInHashMap(mapKey, field, value);
 
-	@Test
-	void testSaveValueWithExpireDate() {
-		String key = "expiringKey";
-		String value = "value";
-		long ttl = 3600L;
+        verify(jedis).hset(mapKey, field, value);
+        verify(jedis).close();
+    }
 
-		redisClientService.saveValueWithExpireDate(key, value, ttl);
+    @Test
+    void testRetrieveValueFromHashMap() {
+        String mapKey = "hashKey";
+        String field = "field";
+        String expectedValue = "value";
 
-		verify(redisClientService).saveValueWithExpireDate(key, value, ttl);
-	}
+        when(jedis.hget(mapKey, field)).thenReturn(expectedValue);
+
+        String result = redisClientService.retrieveValueFromHashMap(mapKey, field);
+
+        Assertions.assertEquals(expectedValue, result);
+        verify(jedis).hget(mapKey, field);
+        verify(jedis).close();
+    }
+
+    @Test
+    void testSaveValueWithExpireDate() {
+        String key = "expiringKey";
+        String value = "value";
+        long ttl = 3600L;
+
+        redisClientService.saveValueWithExpireDate(key, value, ttl);
+
+        verify(jedis).setex(key, ttl, value);
+        verify(jedis).close();
+    }
 }
