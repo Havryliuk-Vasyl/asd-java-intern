@@ -8,13 +8,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import team.asd.redis.IsRedisClientService;
 import team.asd.redis.RedisClientService;
+import team.asd.redis.RedisPoolManager;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/")
 public class Rest {
-	private final IsRedisClientService isRedisClientService = new RedisClientService();
+	private final IsRedisClientService isRedisClientService;
+
+	public Rest(IsRedisClientService isRedisClientService) {
+		this.isRedisClientService = isRedisClientService;
+	}
 
 	@GetMapping("/value")
 	public String readByKey(@RequestParam String key) {

@@ -67,9 +67,7 @@ class RedisClientServiceTest {
 
         redisClientService.saveList(key, values);
 
-        for (String value : values) {
-            verify(jedis).rpush(key, value);
-        }
+        for (String value : values) verify(jedis).rpush(key, value);
         verify(jedis).close();
     }
 
