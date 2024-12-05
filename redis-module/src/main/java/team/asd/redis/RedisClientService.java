@@ -16,8 +16,10 @@ public class RedisClientService implements IsRedisClientService {
 
 	@Override
 	public String readByKey(String key) {
-		if (!isValid(key))
+		if (!isValid(key)) {
 			return null;
+		}
+
 		try (Jedis jedis = jedisPool.getResource()) {
 			return jedis.get(key);
 		}
@@ -41,8 +43,10 @@ public class RedisClientService implements IsRedisClientService {
 		List<String> newList = list.stream()
 				.filter(this::isValid)
 				.toList();
-		if (!newList.equals(list))
+
+		if (!newList.equals(list)) {
 			return;
+		}
 
 		try (Jedis jedis = jedisPool.getResource()) {
 			for (String value : newList) {
@@ -62,8 +66,10 @@ public class RedisClientService implements IsRedisClientService {
 
 	@Override
 	public List<String> retrieveList(String keyList) {
-		if (!isValid(keyList))
+		if (!isValid(keyList)) {
 			return null;
+		}
+
 		try (Jedis jedis = jedisPool.getResource()) {
 			return jedis.lrange(keyList, 0, -1);
 		}
@@ -80,8 +86,9 @@ public class RedisClientService implements IsRedisClientService {
 
 	@Override
 	public String retrieveValueFromHashMap(String primaryKey, String secondaryKey) {
-		if (!isValid(primaryKey) && !isValid(secondaryKey))
+		if (!isValid(primaryKey) && !isValid(secondaryKey)) {
 			return null;
+		}
 
 		try (Jedis jedis = jedisPool.getResource()) {
 			return jedis.hget(primaryKey, secondaryKey);
@@ -90,8 +97,10 @@ public class RedisClientService implements IsRedisClientService {
 
 	@Override
 	public String retrieveValueFromHashMap(String primaryKey) {
-		if (!isValid(primaryKey))
+		if (!isValid(primaryKey)) {
 			return null;
+		}
+
 		try (Jedis jedis = jedisPool.getResource()) {
 			return jedis.get(primaryKey);
 		}
