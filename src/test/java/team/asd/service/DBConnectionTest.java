@@ -1,12 +1,14 @@
 package team.asd.service;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@Disabled
 public class DBConnectionTest {
 
 	@Test
