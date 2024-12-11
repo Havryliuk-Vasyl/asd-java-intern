@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import team.asd.dao.PartyDao;
 import team.asd.entity.Party;
 
+import java.sql.Timestamp;
+
 class PartyServiceTest {
 
 	private PartyService partyService;
@@ -18,5 +20,10 @@ class PartyServiceTest {
 	@Test
 	void testReadById_ValidId() {
 
+	}
+
+	@Test
+	void testCreate_Party(){
+		Party party = new Party(0, "name", "state", "postalAddress", "emailAddress", "mobilePhone", "password", "currency", "userType", )
 	}
 }

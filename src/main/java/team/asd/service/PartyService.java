@@ -1,8 +1,10 @@
 package team.asd.service;
 
+import org.springframework.stereotype.Service;
 import team.asd.dao.PartyDao;
 import team.asd.entity.Party;
 
+@Service
 public class PartyService {
 	private final PartyDao partyDao;
 
