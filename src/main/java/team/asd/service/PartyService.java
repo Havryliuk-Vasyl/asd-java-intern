@@ -13,28 +13,55 @@ public class PartyService {
 	}
 
 	public Party readById(int id) {
-		if (id > 0) {
-			return partyDao.readById(id);
+		if (id <= 0) {
+			throw new IllegalArgumentException("ID must be greater than 0");
 		}
 
-		return null;
+		try {
+			return partyDao.readById(id)
+					.orElseThrow(() -> new RuntimeException("Party with ID " + id + " not found"));
+		} catch (RuntimeException e) {
+			System.err.println("Error in readById: " + e.getMessage());
+			throw e;
+		}
 	}
 
 	public void create(Party party) {
-		if (party != null) {
+		if (party == null) {
+			throw new IllegalArgumentException("Party cannot be null");
+		}
+
+		try {
 			partyDao.create(party);
+		} catch (RuntimeException e) {
+			System.err.println("Error in create: " + e.getMessage());
+			throw e;
 		}
 	}
 
 	public void update(Party party) {
-		if (party != null) {
+		if (party == null || party.getId() <= 0) {
+			throw new IllegalArgumentException("Party or its ID cannot be null/invalid");
+		}
+
+		try {
 			partyDao.update(party);
+		} catch (RuntimeException e) {
+			System.err.println("Error in update: " + e.getMessage());
+			throw e;
 		}
 	}
 
-	public void delete(Party party) {
-		if (party != null) {
-			partyDao.delete(party);
+	public void delete(int id) {
+		if (id <= 0) {
+			throw new IllegalArgumentException("ID must be greater than 0");
+		}
+
+		try {
+			partyDao.delete(id);
+		} catch (RuntimeException e) {
+			System.err.println("Error in delete: " + e.getMessage());
+			throw e;
 		}
 	}
 }

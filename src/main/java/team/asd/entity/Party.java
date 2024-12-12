@@ -3,7 +3,7 @@ package team.asd.entity;
 import java.sql.Timestamp;
 
 public class Party {
-	private int id;
+	private Integer id;
 	private String name;
 	private String state;
 	private String postalAddress;
@@ -18,7 +18,7 @@ public class Party {
 		this.state = "Initial";
 	}
 
-	public Party(int id, String name, String state, String postalAddress, String emailAddress, String mobilePhone, String password, String currency,
+	public Party(Integer id, String name, String state, String postalAddress, String emailAddress, String mobilePhone, String password, String currency,
 			String userType, Timestamp version) {
 		this.id = id;
 		this.name = name;
