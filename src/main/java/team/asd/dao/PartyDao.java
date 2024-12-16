@@ -7,10 +7,14 @@ import java.util.Optional;
 
 public class PartyDao {
 
+	private static final String SELECT_BY_ID_QUERY = "SELECT * FROM party WHERE id = ?";
+	private static final String INSERT_PARTY_QUERY = "INSERT INTO party (name, state, postal_address, email_address, mobile_phone, password, currency, user_type, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String UPDATE_PARTY_QUERY = "UPDATE party SET name = ?, state = ?, postal_address = ?, email_address = ?, mobile_phone = ?, password = ?, currency = ?, user_type = ?, version = ? WHERE id = ?";
+	private static final String DELETE_PARTY_QUERY = "DELETE FROM party WHERE id = ?";
+
 	public Optional<Party> readById(int id) {
-		String query = "SELECT * FROM party WHERE id = ?";
 		try (Connection connection = DatabaseManager.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+				PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID_QUERY)) {
 
 			preparedStatement.setInt(1, id);
 			try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -25,10 +29,8 @@ public class PartyDao {
 	}
 
 	public void create(Party party) {
-		String query = "INSERT INTO party (name, state, postal_address, email_address, mobile_phone, password, currency, user_type, version) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (Connection connection = DatabaseManager.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PARTY_QUERY, Statement.RETURN_GENERATED_KEYS)) {
 
 			setPartyPreparedStatement(party, preparedStatement);
 			int affectedRows = preparedStatement.executeUpdate();
@@ -50,10 +52,8 @@ public class PartyDao {
 	}
 
 	public void update(Party party) {
-		String query = "UPDATE party SET name = ?, state = ?, postal_address = ?, email_address = ?, "
-				+ "mobile_phone = ?, password = ?, currency = ?, user_type = ?, version = ? WHERE id = ?";
 		try (Connection connection = DatabaseManager.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+				PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PARTY_QUERY)) {
 
 			setPartyPreparedStatement(party, preparedStatement);
 			preparedStatement.setInt(10, party.getId());
@@ -68,9 +68,8 @@ public class PartyDao {
 	}
 
 	public void delete(int id) {
-		String query = "DELETE FROM party WHERE id = ?";
 		try (Connection connection = DatabaseManager.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+				PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PARTY_QUERY)) {
 
 			preparedStatement.setInt(1, id);
 			int affectedRows = preparedStatement.executeUpdate();
