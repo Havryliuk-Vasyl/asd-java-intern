@@ -9,12 +9,16 @@ import java.util.Optional;
 
 @Component
 public class PartyDao {
-	private Connection connection;
+	private final Connection connection;
 
 	private static final String SELECT_BY_ID_QUERY = "SELECT * FROM party WHERE id = ?";
 	private static final String INSERT_PARTY_QUERY = "INSERT INTO party (name, state, postal_address, email_address, mobile_phone, password, currency, user_type, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE_PARTY_QUERY = "UPDATE party SET name = ?, state = ?, postal_address = ?, email_address = ?, mobile_phone = ?, password = ?, currency = ?, user_type = ?, version = ? WHERE id = ?";
 	private static final String DELETE_PARTY_QUERY = "DELETE FROM party WHERE id = ?";
+
+	private PartyDao(Connection connection){
+		this.connection = connection;
+	}
 
 	public Optional<Party> readById(int id) {
 		try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID_QUERY)) {
