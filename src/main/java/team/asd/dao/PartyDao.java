@@ -1,11 +1,15 @@
 package team.asd.dao;
 
+import jakarta.annotation.PreDestroy;
+import org.springframework.stereotype.Component;
 import team.asd.entity.Party;
 
 import java.sql.*;
 import java.util.Optional;
 
+@Component
 public class PartyDao {
+	private Connection connection;
 
 	private static final String SELECT_BY_ID_QUERY = "SELECT * FROM party WHERE id = ?";
 	private static final String INSERT_PARTY_QUERY = "INSERT INTO party (name, state, postal_address, email_address, mobile_phone, password, currency, user_type, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -13,8 +17,7 @@ public class PartyDao {
 	private static final String DELETE_PARTY_QUERY = "DELETE FROM party WHERE id = ?";
 
 	public Optional<Party> readById(int id) {
-		try (Connection connection = DatabaseManager.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID_QUERY)) {
+		try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID_QUERY)) {
 
 			preparedStatement.setInt(1, id);
 			try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -29,8 +32,7 @@ public class PartyDao {
 	}
 
 	public void create(Party party) {
-		try (Connection connection = DatabaseManager.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PARTY_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+		try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PARTY_QUERY, Statement.RETURN_GENERATED_KEYS)) {
 
 			setPartyPreparedStatement(party, preparedStatement);
 			int affectedRows = preparedStatement.executeUpdate();
@@ -52,8 +54,7 @@ public class PartyDao {
 	}
 
 	public void update(Party party) {
-		try (Connection connection = DatabaseManager.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PARTY_QUERY)) {
+		try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PARTY_QUERY)) {
 
 			setPartyPreparedStatement(party, preparedStatement);
 			preparedStatement.setInt(10, party.getId());
@@ -68,8 +69,7 @@ public class PartyDao {
 	}
 
 	public void delete(int id) {
-		try (Connection connection = DatabaseManager.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PARTY_QUERY)) {
+		try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PARTY_QUERY)) {
 
 			preparedStatement.setInt(1, id);
 			int affectedRows = preparedStatement.executeUpdate();
@@ -83,18 +83,9 @@ public class PartyDao {
 	}
 
 	private Party mapResultSetToParty(ResultSet resultSet) throws SQLException {
-		return new Party(
-				resultSet.getInt("id"),
-				resultSet.getString("name"),
-				resultSet.getString("state"),
-				resultSet.getString("postal_address"),
-				resultSet.getString("email_address"),
-				resultSet.getString("mobile_phone"),
-				resultSet.getString("password"),
-				resultSet.getString("currency"),
-				resultSet.getString("user_type"),
-				resultSet.getTimestamp("version")
-		);
+		return new Party(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("state"), resultSet.getString("postal_address"),
+				resultSet.getString("email_address"), resultSet.getString("mobile_phone"), resultSet.getString("password"), resultSet.getString("currency"),
+				resultSet.getString("user_type"), resultSet.getTimestamp("version"));
 	}
 
 	private void setPartyPreparedStatement(Party party, PreparedStatement preparedStatement) throws SQLException {
@@ -107,5 +98,10 @@ public class PartyDao {
 		preparedStatement.setString(7, party.getCurrency());
 		preparedStatement.setString(8, party.getUserType());
 		preparedStatement.setTimestamp(9, party.getVersion());
+	}
+
+	@PreDestroy
+	private void closeConnection() throws SQLException {
+		connection.close();
 	}
 }
