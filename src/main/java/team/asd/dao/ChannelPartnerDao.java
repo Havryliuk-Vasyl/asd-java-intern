@@ -9,12 +9,16 @@ import java.util.Optional;
 
 @Component
 public class ChannelPartnerDao {
-	private Connection connection;
+	private final Connection connection;
 
 	private static final String SELECT_BY_ID_QUERY = "SELECT * FROM channel_partner WHERE id = ?";
 	private static final String INSERT_CHANNEL_PARTNER_QUERY = "INSERT INTO channel_partner (party_id, abbreviation, channel_name, state, commission, bp_commission, funds_holder, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE_CHANNEL_PARTNER_QUERY = "UPDATE channel_partner SET party_id = ?, abbreviation = ?, channel_name = ?, state = ?, commission = ?, bp_commission = ?, funds_holder = ?, version = ? WHERE id = ?";
 	private static final String DELETE_CHANNEL_PARTNER_QUERY = "DELETE FROM channel_partner WHERE id = ?";
+
+	public ChannelPartnerDao(Connection connection) {
+		this.connection = connection;
+	}
 
 	public Optional<ChannelPartner> readById(int id) {
 		try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID_QUERY)) {
