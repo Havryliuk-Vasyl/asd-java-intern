@@ -5,6 +5,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RedisClientService implements IsRedisClientService {
@@ -42,7 +43,7 @@ public class RedisClientService implements IsRedisClientService {
 
 		List<String> newList = list.stream()
 				.filter(this::isValid)
-				.toList();
+				.collect(Collectors.toList());
 
 		if (!newList.equals(list)) {
 			return;
