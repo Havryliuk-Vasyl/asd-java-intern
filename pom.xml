@@ -13,6 +13,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.36</version>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.34</version>
@@ -29,15 +34,37 @@
 			<version>3.12.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.36</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<version>3.4.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.4.12</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>3.4.0</version>
 		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.33</version>
+		</dependency>
+		<!--		<dependency>-->
+		<!--			<groupId>team.asd</groupId>-->
+		<!--			<artifactId>redis-module</artifactId>-->
+		<!--			<version>1.0-SNAPSHOT</version>-->
+		<!--			<exclusions>-->
+		<!--				<exclusion>-->
+		<!--					<groupId>org.springframework.boot</groupId>-->
+		<!--					<artifactId>spring-boot-starter</artifactId>-->
+		<!--				</exclusion>-->
+		<!--			</exclusions>-->
+		<!--		</dependency>-->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
@@ -49,37 +76,6 @@
 			<artifactId>reflections</artifactId>
 			<version>0.10.2</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot</artifactId>
-			<version>3.4.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<version>3.4.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-logging</artifactId>
-			<version>3.4.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>ch.qos.logback</groupId>
-					<artifactId>logback-classic</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>team.asd</groupId>
-			<artifactId>redis-module</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.33</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
